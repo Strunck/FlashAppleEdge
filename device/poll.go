@@ -3,6 +3,7 @@ package device
 import (
 	"fmt"
 	"time"
+	"github.com/go-co-op/gocron"
 )
 
 func (s *State) pollClients() {
@@ -21,3 +22,13 @@ func (s *State) pollClients() {
 
 	time.Sleep(10 * time.Second)
 }
+
+func (s *State) pollHourly() (err error) {
+	
+	_, err = s.sched.NewJob(
+		gocron.CronJob("0 * * * *", false),	 // Every hour at minute 0
+		gocron.NewTask(s.pollClients),
+	)
+	return err
+}
+
