@@ -132,35 +132,30 @@ func (t *Trigger) Write(client modbus.Client, tt TriggerType) (err error) {
 
 	switch tt {
 	case Autogain:
-		// Write Autogain trigger
-		err = trigger(client, 100)
+		fmt.Println("Autogain trigger, bitte 2 sek warten")
+		err = trigger(client, 100, 2*time.Second)
 	case F_Messung:
-		// Write F_Messung trigger
-		err = trigger(client, 101)
+		fmt.Println("F_Messung trigger, bitte 6 sek warten")
+		err = trigger(client, 101, 6*time.Second)
 	case Y_Messung:
-		// Write Y_Messung trigger
-		err = trigger(client, 102)
+		fmt.Println("Y_Messung trigger, bitte 8 sek warten")
+		err = trigger(client, 102, 8*time.Second)
 	case Reset:
-		// Write Reset trigger
-		err = trigger(client, 103)
+		fmt.Println("Reset trigger, bitte 1 sek warten")
+		err = trigger(client, 103, 1*time.Second)
 	default:
 		return fmt.Errorf("unknown trigger type: %v", tt)
 	}
+	fmt.Println("Trigger abgeschlossen")
 	return err
 }
 
-func trigger(client modbus.Client, address uint16) (err error) {
+func trigger(client modbus.Client, address uint16, sek time.Duration) (err error) {
 	res, err := client.WriteSingleRegister(address, 1)
 	if err != nil {
 		return fmt.Errorf("failed to write single register at address %d: %w, response: %v", address, err, res)
 	}
-	// Timeout for 2 seconds
-	time.Sleep(2 * time.Second)
-
-	res, err = client.WriteSingleRegister(address, 0)
-	if err != nil {
-		return fmt.Errorf("failed to write single register at address %d: %w, response: %v", address, err, res)
-	}
+	time.Sleep(sek)
 
 	return nil
 }
