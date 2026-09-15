@@ -84,18 +84,28 @@ func (m *Messung) Read(cl modbus.Client) (err error) {
 }
 
 func (m Messung) Print() {
-	fmt.Printf("Flags: %d\n", m.Flags)
-	fmt.Printf("NummerF: %d\n", m.NummerF)
-	fmt.Printf("NummerY: %d\n", m.NummerY)
-	fmt.Printf("F1: %d\n", m.F1)
-	fmt.Printf("F2: %d\n", m.F2)
-	fmt.Printf("Y1: %d\n", m.Y1)
-	fmt.Printf("Y2: %d\n", m.Y2)
-	fmt.Printf("Fo1: %d\n", m.Fo1)
-	fmt.Printf("Fo2: %d\n", m.Fo2)
-	fmt.Printf("Fm1: %d\n", m.Fm1)
-	fmt.Printf("Fm2: %d\n", m.Fm2)
-	fmt.Printf("Minute: %d\n", m.Minute)
+	/*
+		----------------------- Messung ---------------------
+		Zeit: 2026-09-01 12:00:00
+		F1: 123 - F2: 456 - Y1: 789 - Y2: 012
+		Flags: 4 - NummerF/Y: 1/2 - Fo: 123/123 Fm: 123/123
+		Minuten des Tages: 123
+		-----------------------------------------------------
+	*/
+	fmt.Printf("Zeit: %s\n", NettesDatum())
+	fmt.Printf("F1: %d - F2: %d - Y1: %d - Y2: %d\n", m.F1, m.F2, m.Y1, m.Y2)
+	fmt.Printf("Flags: %d - NummerF/Y: %d/%d - Fo: %d/%d Fm: %d/%d\n", m.Flags, m.NummerF, m.NummerY, m.Fo1, m.Fo2, m.Fm1, m.Fm2)
+	fmt.Printf("Minuten des Tages: %d\n", m.Minute)
+}
+
+func (r Register) Print(i, j int) {
+	fmt.Printf("-------- Line: %d, Slave: %d -----------------\n", i+1, j+1)
+	r.Mess.Print()
+	fmt.Printf("--------------------------------------------\n")
+}
+
+func (m Messung) printCSV() string {
+	return fmt.Sprintf("%s,%s,%d,%d,%d,%d", time.Now(), NettesDatum(), m.F1, m.F2, m.Y1, m.Y2)
 }
 
 func (e *Einstellungen) Read(client modbus.Client) (err error) {
@@ -153,4 +163,8 @@ func trigger(client modbus.Client, address uint16) (err error) {
 	}
 
 	return nil
+}
+
+func NettesDatum() string {
+	return time.Now().Format("2006-01-02 15:04:05")
 }

@@ -2,8 +2,8 @@ package device
 
 import (
 	"fmt"
-	"time"
-	"github.com/go-co-op/gocron"
+
+	gocron "github.com/go-co-op/gocron/v2"
 )
 
 func (s *State) pollClients() {
@@ -15,20 +15,18 @@ func (s *State) pollClients() {
 			if err != nil {
 				// Handle the error appropriately, e.g., log it
 				fmt.Printf("Error reading Messung for line %d, slave %d: %v\n", lnr+1, sid+1, err)
+			} else {
+				s.r[lnr][sid].Print(lnr, sid)
 			}
-			s.r[lnr][sid].Mess.Print()
 		}
 	}
-
-	time.Sleep(10 * time.Second)
 }
 
 func (s *State) pollHourly() (err error) {
-	
+
 	_, err = s.sched.NewJob(
-		gocron.CronJob("0 * * * *", false),	 // Every hour at minute 0
+		gocron.CronJob("0 * * * *", false), // Every hour at minute 0
 		gocron.NewTask(s.pollClients),
 	)
 	return err
 }
-
