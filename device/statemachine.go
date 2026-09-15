@@ -1,16 +1,19 @@
 package device
 
 import (
+	"context"
 	"fmt"
+	"os"
+	"os/signal"
 
+	gocron "github.com/go-co-op/gocron/v2"
 	modbus "github.com/goburrow/modbus"
-	"github.com/go-co-op/gocron"
 )
 
 type State struct {
-	cfg Config
-	u   [][]modbus.Client
-	r   [][]Register
+	cfg   Config
+	u     [][]modbus.Client
+	r     [][]Register
 	sched gocron.Scheduler
 }
 
@@ -30,9 +33,9 @@ func Run() (err error) {
 		fmt.Printf("Main MakeClientsFromConfig error: %v", err)
 		return err
 	}
-	
+
 	se.sched, err = gocron.NewScheduler()
-	defer func() { _= se.sched.Shutdown() }()
+	defer func() { _ = se.sched.Shutdown() }()
 
 	err = se.pollHourly()
 	if err != nil {
@@ -41,6 +44,16 @@ func Run() (err error) {
 	}
 	se.sched.Start()
 
+	bgctx := context.Background()
+
+	ctx, userstop := signal.NotifyContext(bgctx, os.Interrupt)
+
+	select {
+	case <-make(chan struct{}):
+	// This will block forever, effectively keeping the program running
+	case <-ctx.Done():
+		userstop()
+	}
 
 	return nil
 
