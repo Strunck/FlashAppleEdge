@@ -1,0 +1,29 @@
+"offset";"size";"type";"metric";"descr";"symbol";"short"
+10;2;;;"Flags";;
+11;2;"uint16";"ufg_messwerte";"fortlaufende Nummer F-Messung ";;"NummerF"
+12;2;"uint16";"ufg_messwerte";"fortlaufende Nummer Y-Messung ";;"NummerY"
+13;2;"uint16";"ufg_messwerte";"Fluorezenzwert rechts";;"F1"
+14;2;"uint16";"ufg_messwerte";"Fluorezenzwert links";;"F2"
+15;2;"uint16";"ufg_messwerte";"Yieldwert rechts";;"Y1"
+16;2;"uint16";"ufg_messwerte";"Yieldwert links";;"Y2"
+17;2;"uint16";"ufg_messwerte";;;"Fo1"
+18;2;"uint16";"ufg_messwerte";;;"Fo2"
+19;2;"uint16";"ufg_messwerte";;;"Fm1"
+20;2;"uint16";"ufg_messwerte";;;"Fm2"
+21;2;"uint16";"ufg_messwerte";;;"Minute"
+100;2;"uint16";"ufg_einstellung";"Autogain ";;"Autogain"
+101;2;"uint16";"ufg_einstellung";"F-Messung ";;"Fmess"
+102;2;"uint16";"ufg_einstellung";"Y-Messung ";;"Ymess"
+103;2;"uint16";"ufg_einstellung";"Reset Default Settings ";;"Reset"
+200;2;"uint16";"ufg_einstellung";"Modus F-Messung ";;
+201;2;"uint16";"ufg_einstellung";"Intervall F-Messung ";;
+202;2;"uint16";"ufg_einstellung";"Modus Y-Messung ";;
+203;2;"uint16";"ufg_einstellung";"Intervall Y-Messung ";;
+204;2;"uint16";"ufg_einstellung";"Zeitpunkt Y-Messung ";;
+205;2;"uint16";"ufg_einstellung";"DAC #1 ";;
+206;2;"uint16";"ufg_einstellung";"DAC #2 ";;
+207;2;"uint16";"ufg_einstellung";"Messfrequenz ";;
+208;2;"uint16";"ufg_einstellung";"Integrationszeit F ";;
+209;2;"uint16";"ufg_einstellung";"SAT #1 ";;
+210;2;"uint16";"ufg_einstellung";"SAT #2 ";;
+211;2;"uint16";"ufg_einstellung";"Minuten des Tages ";;

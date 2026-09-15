@@ -2,14 +2,25 @@
 
 ## Messung
 
-|Short|type|Beschreibung|
-|-|-|-|
+|Short|type|Beschreibung|Dauer|
+|-|-|-|-|
 |F1|uint16|Fluorezenzwert rechts|
 |F2|uint16|Fluorezenzwert links|
 |Y1|uint16|Yieldwert rechts|
 |Y2|uint16|Yieldwert links|
 
-Es werden stündliche Messungen gemacht und dabei pro Unit in eine CSV Datei geschrieben
+
+### Trigger
+|Register|Zweck|Short|Dauer|
+|-|-|-|-|
+|100|Inbetriebnahme, Intensität ermitteln|Autogain|2 sek|
+|101|Fluorezenzmessung stündlich|F_Messung|6 sek|
+|102|Yield Messung täglich |Y_Messung|8 sek|
+|103|Werkseinstellungen|Reset|2 sek|
+
+## Persitenz CSV
+
+Es werden stündliche Messungen (F_Messung) gemacht und dabei pro Unit in eine CSV Datei geschrieben
 ```CSV
 file: fruitguard_ORT02_UNIT01.csv
 "UTC", "Datum", "Zeit", "F1", "F2", "Y1", "Y2"
@@ -22,33 +33,33 @@ file: fruitguard_ORT02_UNIT01.csv
 - Es wird immer angehängt
 
 
-### Prometheus
+## Prometheus
+Ein Prometheus Endpunkt wird zum Abspeichern der Messwerte und Einstellungen zu Verfügung gestellt
 
-Metric Name: ufg_messwerte
-Metric Help: Fruitguard Messwert
-Labels: serial, messung, ort, base
-- base: Kundenkennung
-- serial: Unit ID des Gerätes
-- ort: Raumnummer
-- messung: F1, F2, Y1, Y2
+#### ufg_messwerte
+- Metric Help: Fruitguard Messwert
+- Labels: 
+    - base: Kundenkennung
+    - serial: Unit ID des Gerätes
+    - ort: Raumnummer
+    - messung: F1, F2, Y1, Y2
 
-Metric Name: ufg_einstellung
-Metric Help: Fruitguard Einstellungen
-Labels: serial, wert, ort, base
+#### ufg_einstellung
+- Metric Help: Fruitguard Einstellungen
+- Labels: serial, wert, ort, base
 - base: Kundenkennung
-- serial: Unit ID des Gerätes
-- ort: Raumnummer
-- short: 
-    - ModusF         
-    - IntervallF     
-    - ModusY         
-    - IntervallY     
-    - ZeitpunktY     
-    - DAC1           
-    - DAC2           
-    - Messfrequenz   
-    - IntegratZeitF  
-    - SAT1           
-    - SAT2           
-    - MinutenDesTages
-    
+    - serial: Unit ID des Gerätes
+    - ort: Raumnummer
+    - short: 
+        - ModusF         
+        - IntervallF     
+        - ModusY         
+        - IntervallY     
+        - ZeitpunktY     
+        - DAC1           
+        - DAC2           
+        - Messfrequenz   
+        - IntegratZeitF  
+        - SAT1           
+        - SAT2           
+        - MinutenDesTages
