@@ -11,13 +11,6 @@ import (
 // 2d Array. [line][SlaveID]
 func (s *State) MakeClientsFromConfig() (err error) {
 
-	c := make([][]modbus.Client, s.cfg.Count)
-	r := make([][]Register, s.cfg.Count)
-	for i := range c {
-		c[i] = make([]modbus.Client, s.cfg.Lines[i].IdCount)
-		r[i] = make([]Register, s.cfg.Lines[i].IdCount)
-	}
-
 	// Implement the logic to create Modbus clients based on the provided configuration
 	for lnr, line := range s.cfg.Lines {
 		switch line.ConType {
@@ -37,7 +30,7 @@ func (s *State) MakeClientsFromConfig() (err error) {
 				handler.SlaveId = byte(slaveID)
 				handler.IdleTimeout = 3 * time.Hour
 				handler.Timeout = 5 * time.Second
-				c[lnr][sid] = modbus.NewClient(handler)
+				s.units[lnr][sid].m = modbus.NewClient(handler)
 			}
 		case "RTU":
 			fmt.Println("Creating RTU client for line", lnr+1)
@@ -53,12 +46,10 @@ func (s *State) MakeClientsFromConfig() (err error) {
 				handler.Parity = "N"
 				handler.StopBits = 1
 				handler.Timeout = 5 * time.Second
-				c[lnr][sid] = modbus.NewClient(handler)
+				s.units[lnr][sid].m = modbus.NewClient(handler)
 			}
 		}
 	}
-	s.u = c // Modbus Clients
-	s.r = r // Modbus Register and Methods to poll
 
 	s.pollClients()
 

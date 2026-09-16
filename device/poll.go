@@ -2,29 +2,30 @@ package device
 
 import (
 	"fmt"
-	"time"
 
 	gocron "github.com/go-co-op/gocron/v2"
 )
 
 func (s *State) pollClients() {
 
-	for lnr, line := range s.u {
-		for sid, client := range line {
-			err := s.r[lnr][sid].Trig.Write(client, F_Messung)
+	for lnr, line := range s.units {
+		for sid := 0; sid < len(line); sid++ {
+			err := s.units[lnr][sid].r.Trig.Write(s.units[lnr][sid].m, F_Messung)
 			if err != nil {
 				fmt.Printf("Error writing trigger for line %d, slave %d: %v\n", lnr+1, sid+1, err)
 			}
-			time.Sleep(2 * time.Second)
 
-			err = s.r[lnr][sid].Mess.Read(client)
+			err = s.units[lnr][sid].r.Mess.Read(s.units[lnr][sid].m)
 			if err != nil {
 				// Handle the error appropriately, e.g., log it
 				fmt.Printf("Error reading Messung for line %d, slave %d: %v\n", lnr+1, sid+1, err)
 			} else {
-				s.r[lnr][sid].Print(lnr, sid)
+				s.units[lnr][sid].r.Print(lnr, sid)
+				if err := s.units[lnr][sid].writeLineInCSV(); err != nil {
+					fmt.Printf("Error writing line to CSV for line %d, slave %d: %v\n", lnr+1, sid+1, err)
+				}
 			}
-			time.Sleep(2 * time.Second)
+
 		}
 	}
 }
