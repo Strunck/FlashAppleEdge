@@ -105,7 +105,7 @@ func (r Register) Print(i, j int) {
 }
 
 func (m Messung) printCSV() string {
-	return fmt.Sprintf("%s,%s,%d,%d,%d,%d", time.Now(), NettesDatum(), m.F1, m.F2, m.Y1, m.Y2)
+	return fmt.Sprintf("%s,%d,%d,%d,%d,%d", time.Now().Format(time.RFC3339), time.Now().Unix(), m.F1, m.F2, m.Y1, m.Y2)
 }
 
 func (e *Einstellungen) Read(client modbus.Client) (err error) {

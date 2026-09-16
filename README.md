@@ -23,9 +23,11 @@
 Es werden stündliche Messungen (F_Messung) gemacht und dabei pro Unit in eine CSV Datei geschrieben
 ```CSV
 file: fruitguard_ORT02_UNIT01.csv
-"UTC", "Datum", "Zeit", "F1", "F2", "Y1", "Y2"
-1789453566, 2026-09-15, 123,133, 890, 950
+"iso", "timestamp", "Zeit", "F1", "F2", "Y1", "Y2"
+2026-09-16T09:08:52+02:00; 1789453566, 2026-09-15, 123,133, 890, 950
 ```
+iso entspricht RFC3339, oder ISO 8601 (vermutlich...)
+timestamp ist der UNIX timestamp, 
 
 ### Features
 - Die CSV Datei kann heruntergeladen werden
