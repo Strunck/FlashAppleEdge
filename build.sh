@@ -3,7 +3,7 @@
 # Build script for FlashAppleEDGE
 # Builds for Linux x86_64, Linux aarch64, and Windows x86_64
 
-VERSION=0.0.3
+VERSION=0.0.4
 
 echo "Building FlashAppleEDGE..."
 

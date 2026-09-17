@@ -5,10 +5,10 @@ import (
 	"fmt"
 )
 
-const Version = "dev - 0.0.2"
+var Version = "development"
 
 func main() {
-	fmt.Println("FlashApple Edge Client Version ", Version)
+	fmt.Println("FlashApple Edge Client Version", Version)
 
 	device.Run()
 
