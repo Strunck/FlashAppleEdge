@@ -1,6 +1,21 @@
+# Flash Apple Edge
+Hier ist ein Programm, welches per Modbus periodisch Daten eines Walz Fruitguard Sensors abfragt. Die ausgelesen Daten werden pro Sensor in eine CSV geschrieben.
 
+Die Sensoren werden über die die Datei konfig.ini konfiguriert, die im selben Ordner, wie die ausführbare Datei liegen muss.
+In der Konfigdatei gibt man an, wie welche Sensoren angeschlossen sind. In der Datei sind Erläuterungen, was man einstellen kann.
+
+Das Programm funktioniert sowohl auf Windows 64 bit und Linux aarch64 und x86_64. 
+
+
+## Inbetriebnahme
+
+1. Autogain ausführen
+2. Yield Messung ausführen
+2. Der Yield Wert kann max. 1000 werden. Je höher desto besser. 
+3. Den Sensor so lange plazieren, bis ein maximaler Yield Wert erreicht wird.
 
 ## Messung
+Eine F_Messung findet stündlich statt. Hierbei wird der Fluorezenzwert und der Yield Wert in eine CSV Datei geschrieben.
 
 |Short|type|Beschreibung|Dauer|
 |-|-|-|-|
@@ -11,6 +26,9 @@
 
 
 ### Trigger
+
+Es gibt 4 Aktionen, die man auslösen kann. Die sind zur Inbetriennahme.
+
 |Register|Zweck|Short|Dauer|
 |-|-|-|-|
 |100|Inbetriebnahme, Intensität ermitteln|Autogain|2 sek|
