@@ -77,7 +77,7 @@ func (s *State) intiFiles(folderName string) (err error) {
 }
 
 func (u Unit) writeLineInCSV() (err error) {
-	_, err = u.f.WriteString(u.r.Mess.printCSV())
+	_, err = u.f.WriteString(u.r.Mess.printCSV() + "\n")
 	if err != nil {
 		return fmt.Errorf("writeCSV: failed to write to CSV file: %v", err)
 	}
@@ -85,6 +85,7 @@ func (u Unit) writeLineInCSV() (err error) {
 }
 
 func (s *State) CloseAllFiles() (err error) {
+	fmt.Println("Closing all CSV files...")
 	for l, line := range s.units {
 		for i, unit := range line {
 			if unit.f != nil {
