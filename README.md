@@ -83,3 +83,15 @@ Ein Prometheus Endpunkt wird zum Abspeichern der Messwerte und Einstellungen zu 
         - SAT1           
         - SAT2           
         - MinutenDesTages
+
+## Aufruf Hierachy
+
+```
+package main
+    |
+    package device (notify changes, recieves trigger)
+    |
+    package web (refresh on change, transmit trigger)
+        |  
+        call device methods
+```
