@@ -25,20 +25,20 @@ func (s *State) intiFiles(folderName string) (err error) {
 	}
 
 	// Dateinamen aus Config generieren und im FileManager speichern
-	for l, line := range s.cfg.Lines {
+	for l, line := range s.Cfg.Lines {
 		for i, id := range line.Id {
 
 			fileName := fmt.Sprintf("fruitguard_%s_ID%02d.csv", line.Ort, id)
 			filePath := filepath.Join(folderName, fileName)
 
-			s.units[l][i].f, err = os.OpenFile(filePath, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+			s.Units[l][i].f, err = os.OpenFile(filePath, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 			if err != nil {
 				return fmt.Errorf("intiFiles: failed to open CSV file %s: %v", filePath, err)
 			}
 			// Schreibe den CSV-Header, falls weniger als eine Zeile hat
-			fileInfo, _ := s.units[l][i].f.Stat()
+			fileInfo, _ := s.Units[l][i].f.Stat()
 			if fileInfo.Size() == 0 {
-				if _, err := s.units[l][i].f.WriteString(csvHeader + "\n"); err != nil {
+				if _, err := s.Units[l][i].f.WriteString(csvHeader + "\n"); err != nil {
 					return fmt.Errorf("intiFiles: failed to write CSV header to file %s: %v", filePath, err)
 				}
 			}
@@ -86,7 +86,7 @@ func (u Unit) writeLineInCSV() (err error) {
 
 func (s *State) CloseAllFiles() (err error) {
 	fmt.Println("Closing all CSV files...")
-	for l, line := range s.units {
+	for l, line := range s.Units {
 		for i, unit := range line {
 			if unit.f != nil {
 				if err := unit.f.Close(); err != nil {

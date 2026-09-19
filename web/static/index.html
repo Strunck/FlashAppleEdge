@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+	<title>FlashApple Edge</title>
+</head>
+<body>
+    <script type="module" src="https://cdn.jsdelivr.net/gh/starfederation/datastar@v1.0.3/bundles/datastar.js"></script>
+	<div class="container" data-effect="@get('/indextbl')">
+
+    <div class="button-grid">
+		<a href="unit.html" type="button">Details</a>
+        <a href="/metrics" type="button">Metrics</a>
+		<button type="button" onclick="location.reload()">Refresh</button>		
+	</div>
+		
+        <div class="panel" >
+			<h1 id="mu">FlashApple Edge</h1>
+			<p>Inbetriebname und Überwachung der lokalen FruitGuard Sensoren</p>
+
+			<div class="table-wrapper">
+				<table>
+					<thead>
+						<tr>
+							<th>Raum</th>
+							<th>Kommunikation</th>							
+							<th>F1</th>
+                            <th>F2</th>
+                            <th>Y1</th>
+                            <th>Y2</th>
+							<th>Letzte Messung</th>
+						</tr>
+					</thead>
+					<tbody id="indextable">
+                        
+						<tr id="messwerte" data-on:click="window.location.href = 'unit.html'">
+                            
+                            <td id="raum">R01</td>
+                            <td id="com">COM11 #34</td>                            
+							<td id="f1">0.00</td>
+							<td id="f2">0.00</td>
+							<td id="y1">0.00</td>
+							<td id="y2">0.00</td>
+							<td id="ts">-</td>
+                            
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+        <br>
+
+        <div class="panel" >
+            <h3>Meldungen</h3>
+            <code id="logmessages">
+                ...status messages will appear here...
+            </code>
+        </div>
+
+	</div>
+
+
+
+    <div data-on:keydown__window="evt.key === 'ArrowRight' && Increment()"></div>
+    <div data-on:keydown__window="evt.key === 'ArrowLeft' && Decrement()"></div>
+	<script>
+        var counter = 0;
+        function Increment(){
+            counter++;
+            document.getElementById('mu').textContent = "Messübersicht " + counter;
+        }
+
+        function Decrement(){
+            counter--;
+            document.getElementById('mu').textContent = "Messübersicht " + counter;
+        }
+
+	</script>
+</body>
+</html>

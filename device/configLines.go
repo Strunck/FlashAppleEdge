@@ -18,6 +18,7 @@ type Line struct {
 type Config struct {
 	Lines []Line // Linie ist
 	Count int
+	Base  string
 }
 
 func LoadConfig() (cfg Config, err error) {
@@ -29,6 +30,12 @@ func LoadConfig() (cfg Config, err error) {
 	cfg.Count, err = data.Section("").Key("LINES").Int()
 	if err != nil {
 		return Config{}, fmt.Errorf("Failed to read LINES: %v", err)
+	}
+
+	cfg.Base = data.Section("").Key("BASE").String()
+	if cfg.Base == "" {
+		fmt.Println("BASE wurde nicht gesetzt. Siehe konfig.ini ")
+		cfg.Base = "DEFAULT"
 	}
 
 	cfg.Lines = make([]Line, cfg.Count)
@@ -49,7 +56,7 @@ func LoadConfig() (cfg Config, err error) {
 }
 
 func PrintConfig(cfg Config) {
-	fmt.Println("Konfiguration:")
+	fmt.Println("Konfiguration Anlage: ", cfg.Base)
 	for i, line := range cfg.Lines {
 		fmt.Printf("Line %d: Ort %s - %s %s %v\n", i+1, line.Ort, line.ConType, line.Url, line.Id)
 	}

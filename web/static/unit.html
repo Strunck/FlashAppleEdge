@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+	<title>FlashApple Edge</title>
+</head>
+<body>
+    <script type="module" src="https://cdn.jsdelivr.net/gh/starfederation/datastar@v1.0.3/bundles/datastar.js"></script>
+	<div class="container">
+
+	<div class="button-grid">
+		<a href="index.html" type="button">Startseite</a>		
+		<button type="button" onclick="location.reload()">Refresh</button>
+		<button type="button">Zurück</button>
+		<button type="button">Vor</button>
+	</div>
+		
+        <div class="panel" >
+			<h1 id="mu">FlashApple Edge</h1>
+			<p>Übersicht der Messwert Betriebsdaten</p>
+
+			<div class="button-grid">
+				<button type="button">Autogain</button>
+				<button type="button">F-Messung</button>
+				<button type="button">Y-Messung</button>
+				<button type="button">Werkseinstellung</button>
+			</div>
+
+			<div class="table-wrapper">
+				<table>
+					<thead>
+						<tr>
+							<th>F1</th>
+							<th>F2</th>
+							<th>Y1</th>
+							<th>Y2</th>
+							<th>Zeitstempel der Messung</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr id="messwerte">
+							<td id="f1">0.00</td>
+							<td id="f2">0.00</td>
+							<td id="y1">0.00</td>
+							<td id="y2">0.00</td>
+							<td id="timestamp">-</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+
+    <div data-on:keydown__window="evt.key === 'ArrowRight' && Increment()"></div>
+    <div data-on:keydown__window="evt.key === 'ArrowLeft' && Decrement()"></div>
+	<script>
+        var counter = 0;
+        function Increment(){
+            counter++;
+            document.getElementById('mu').textContent = "Messübersicht " + counter;
+        }
+
+        function Decrement(){
+            counter--;
+            document.getElementById('mu').textContent = "Messübersicht " + counter;
+        }
+
+		function aktualisiereZeitstempel() {
+			const zeitstempel = new Date().toLocaleString('de-DE');
+			document.getElementById('timestamp').textContent = zeitstempel;
+		}
+
+		aktualisiereZeitstempel();
+	</script>
+</body>
+</html>

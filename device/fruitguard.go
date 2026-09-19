@@ -22,6 +22,7 @@ type Messung struct {
 	Fm1     uint16 `register:"19"`
 	Fm2     uint16 `register:"20"`
 	Minute  uint16 `register:"21"`
+	gauges  MessungGauges
 }
 
 type Trigger struct {
@@ -80,6 +81,7 @@ func (m *Messung) Read(cl modbus.Client) (err error) {
 	m.Fm1 = binary.BigEndian.Uint16(results[18:20])
 	m.Fm2 = binary.BigEndian.Uint16(results[20:22])
 	m.Minute = binary.BigEndian.Uint16(results[22:24])
+	m.setGauges()
 	return nil
 }
 
@@ -146,7 +148,7 @@ func (t *Trigger) Write(client modbus.Client, tt TriggerType) (err error) {
 	default:
 		return fmt.Errorf("unknown trigger type: %v", tt)
 	}
-	fmt.Println("Trigger abgeschlossen")
+
 	return err
 }
 

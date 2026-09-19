@@ -3,7 +3,7 @@
 # Build script for FlashAppleEDGE
 # Builds for Linux x86_64, Linux aarch64, and Windows x86_64
 
-VERSION=0.0.4
+VERSION=0.0.5
 
 echo "Building FlashAppleEDGE..."
 
@@ -23,3 +23,7 @@ GOOS=windows GOARCH=amd64 go build -ldflags "-s -w -X 'main.Version=${VERSION}'"
 echo "Built: flashAppleEDGE.exe"
 
 echo "Build complete!"
+
+touch release/v${VERSION}.info
+echo "Version: ${VERSION}" > release/v${VERSION}.info
+echo "Erstellt am $(date)" >> release/v${VERSION}.info
