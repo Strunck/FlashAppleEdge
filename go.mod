@@ -7,6 +7,7 @@ require (
 	github.com/goburrow/modbus v0.1.0
 	github.com/prometheus/client_golang v1.24.1
 	gopkg.in/ini.v1 v1.67.3
+	github.com/starfederation/datastar-go v1.2.2
 )
 
 require (
@@ -23,7 +24,6 @@ require (
 	github.com/prometheus/common v0.70.1 // indirect
 	github.com/prometheus/procfs v0.21.1 // indirect
 	github.com/robfig/cron/v3 v3.0.1 // indirect
-	github.com/starfederation/datastar-go v1.2.2 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	golang.org/x/sys v0.47.0 // indirect
 	google.golang.org/protobuf v1.36.11 // indirect
