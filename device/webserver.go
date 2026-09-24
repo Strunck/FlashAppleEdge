@@ -1,7 +1,6 @@
-package web
+package device
 
 import (
-	"Strunck/FlashApple/device"
 	"embed"
 	"fmt"
 	"io/fs"
@@ -14,7 +13,7 @@ const port = ":8099"
 //go:embed static/*.html static/style.css
 var content embed.FS
 
-func Run(ds *device.State) {
+func RunWebServer(ds State, errCh chan error) {
 	var err error
 
 	webFS, err := fs.Sub(content, "static")
@@ -26,7 +25,7 @@ func Run(ds *device.State) {
 	fs := http.FileServer(http.FS(webFS))
 	http.Handle("/", fs)
 
-	http.Handle("/metrics", ds.Metrics.MetricsHandler())
+	// http.Handle("/metrics", ds.Metrics.MetricsHandler())
 
 	//  -- Datastar endpoints
 	http.Handle("/indextbl", HandleIndexTbl(ds))
@@ -36,5 +35,7 @@ func Run(ds *device.State) {
 	err = http.ListenAndServe(port, nil)
 	if err != nil {
 		fmt.Printf("Error starting server: %v\n", err)
+	} else {
+		ds.PollClients(errCh)
 	}
 }

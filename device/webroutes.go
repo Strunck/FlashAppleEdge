@@ -1,14 +1,13 @@
-package web
+package device
 
 import (
-	"Strunck/FlashApple/device"
 	"fmt"
 	"net/http"
 
 	"github.com/starfederation/datastar-go/datastar"
 )
 
-func HandleIndexTbl(ds *device.State) http.Handler {
+func HandleIndexTbl(ds State) http.Handler {
 
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
@@ -33,7 +32,7 @@ func HandleIndexTbl(ds *device.State) http.Handler {
 	})
 }
 
-func loadIndexTbl(ds *device.State) string {
+func loadIndexTbl(ds State) string {
 	html := ""
 	for l, line := range ds.Cfg.Lines {
 		for i := 0; i < line.IdCount; i++ {

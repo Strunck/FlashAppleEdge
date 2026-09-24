@@ -21,6 +21,8 @@ type MessungGauges struct {
 }
 
 func (m *Messung) setGauges() {
+	// Das darf erst passieren, wenn der WebServer gestartet wurde!!!
+	// Sonst geht Set nicht!
 	m.gauges.F1.Set(float64(m.F1))
 	m.gauges.F2.Set(float64(m.F2))
 	m.gauges.Y1.Set(float64(m.Y1 / 1000))

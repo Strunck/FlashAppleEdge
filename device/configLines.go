@@ -22,6 +22,7 @@ type Config struct {
 }
 
 func LoadConfig() (cfg Config, err error) {
+	fmt.Println("LoadConfig() called")
 	data, err := ini.Load("konfig.ini")
 	if err != nil {
 		return Config{}, fmt.Errorf("Failed to read file: %v", err)
@@ -59,5 +60,13 @@ func PrintConfig(cfg Config) {
 	fmt.Println("Konfiguration Anlage: ", cfg.Base)
 	for i, line := range cfg.Lines {
 		fmt.Printf("Line %d: Ort %s - %s %s %v\n", i+1, line.Ort, line.ConType, line.Url, line.Id)
+	}
+}
+
+func (se *State) initUnits() {
+	// Initialisiert ein 2D-Array für die
+	se.Units = make([][]Unit, se.Cfg.Count)
+	for l, line := range se.Cfg.Lines {
+		se.Units[l] = make([]Unit, len(line.Id))
 	}
 }

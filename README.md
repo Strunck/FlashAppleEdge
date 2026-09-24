@@ -94,4 +94,50 @@ package main
     package web (refresh on change, transmit trigger)
         |  
         call device methods
+
+pollClients
+    Vorraussetzung: initDone
+    Loop units 
+        1. Trigger F_Messung unit
+        2. Read Messwerte (m.Read)
+        3. Upload Metrics (prometheus.Gauge.Set(float)) 
+            (Voraussetung webServer running -> handerPrometheus OK)
+        4. Refresh unit-html, 
+                falls User Online
+        5. Publish Nats-Topic
+
 ```
+
+
+# Programmatische Abstimmung
+
+### Probleme:
+
+1. Sicherstellen, das bei der Initialisierung alles geladen ist und nichts abstürzt. Dazu muss eine Reihenfolge eingehalten werden.
+    - KONFIG_FILE
+    - INIT_NATS
+    - INIT_WEBSERVER
+    - INIT_UNITS        
+    - INIT_METRIC       - Fehlerfälle?
+    - READY_TO_POLL     - Fehlerfälle?
+    - INIT_SCHEDULER    - Fehlerfälle?
+    - RUNNING           - msg to topic:Errors || Data
+    - SHUTDOWN
+
+Im Fehlerfall - Logdatei-Eintrag, UI-Hinweistext
+
+
+2. Neue Daten signalisieren und damit Aktionen auslösen
+    - UI aktulisieren
+    - Auf Interaktion reagieren
+     - Fehler behandeln
+
+### Pipeline Channel (Init-Aktion)
+Über die Pipeline kommunizieren die Programbausteine untereinander. 
+Sie kommunizieren was als nächstes zu tun ist. 
+D.h, welche Programmbaustein als nächstes aufgerufen wird.
+Ein switch-case ruft den nächsten Baustein auf.
+
+### Message Bus (Betriebs-Aktionen)
+Der Message-Bus sendet Benutzerinteraktion, neue Daten und Fehler.
+Andere Programmbausteine sollen dann Aktionen auslösen. In etwa UI aktualisieren, metrics aktualierem, csv Datei schreiben.

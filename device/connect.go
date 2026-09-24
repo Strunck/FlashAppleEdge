@@ -51,10 +51,6 @@ func (s *State) MakeClientsFromConfig(errCh chan error, initDoneCh chan bool) {
 		}
 	}
 
-	s.initMetrics()
-
-	s.pollClients(errCh)
-
 	initDoneCh <- true
 
 }
