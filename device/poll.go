@@ -7,7 +7,7 @@ import (
 )
 
 func (s *State) PollClients() {
-	fmt.Println("Polling startet...")
+	s.publishMsg("Polling startet...", true)
 
 	for lnr, line := range s.Units {
 		ort := s.Cfg.Lines[lnr].Ort
@@ -18,20 +18,20 @@ func (s *State) PollClients() {
 
 			unit := s.Units[lnr][sid]
 
+			s.publishMsg(fmt.Sprintf("F_Messung %s", loc), true)
 			err := unit.r.Trig.Write(unit.m, F_Messung)
 			if err != nil {
-				s.NatsClient.Publish("pool", fmt.Appendf(nil, "Error Trig(F_Messung) %s: %v\n", loc, err))
+				s.publishMsg(fmt.Sprintf("Error Trig(F_Messung) %s: %v\n", loc, err), true)
 			}
 
 			err = unit.r.Mess.Read(unit.m)
 			if err != nil {
-				// Handle the error appropriately, e.g., log it
-				s.NatsClient.Publish("pool", fmt.Appendf(nil, "Error reading Messung %s: %v\n", loc, err))
+				s.publishMsg(fmt.Sprintf("Error reading Messung %s: %v\n", loc, err), true)
 				continue
 			} else {
 				unit.r.Print(lnr, sid)
 				if err := unit.writeLineInCSV(); err != nil {
-					s.NatsClient.Publish("pool", fmt.Appendf(nil, "Error writing line to CSV %s: %v\n", loc, err))
+					s.publishMsg(fmt.Sprintf("Error writing line to CSV %s: %v\n", loc, err), true)
 					continue
 				}
 			}

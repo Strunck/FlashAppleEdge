@@ -45,7 +45,7 @@ func newMessungGauge(base string, serial string, ort string, messung string) pro
 }
 
 func (s *State) initMetrics() {
-	fmt.Println("Initalisiere Metriken")
+	fmt.Printf("Initalisiere Metriken")
 	s.Metrics = Metrics{}
 	s.Metrics.Registry = prometheus.NewRegistry()
 
@@ -67,6 +67,7 @@ func (s *State) initMetrics() {
 			s.Metrics.Registry.MustRegister(g.Y2)
 		}
 	}
+	fmt.Printf(" -- Fertig, Registry vorhanden\n")
 }
 
 func (m *Metrics) MetricsHandler() http.Handler {

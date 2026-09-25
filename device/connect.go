@@ -15,7 +15,7 @@ func (s *State) MakeClientsFromConfig() {
 	for lnr, line := range s.Cfg.Lines {
 		switch line.ConType {
 		case "TCP":
-			fmt.Println("Creating TCP client for line", lnr+1)
+			s.publishMsg(fmt.Sprintf("Creating TCP client for line %d", lnr+1), true)
 			// Create a Modbus client for each line based on its configuration
 			handler := modbus.NewTCPClientHandler(line.Url)
 			handler.Connect()
@@ -33,7 +33,7 @@ func (s *State) MakeClientsFromConfig() {
 				s.Units[lnr][sid].m = modbus.NewClient(handler)
 			}
 		case "RTU":
-			fmt.Println("Creating RTU client for line", lnr+1)
+			s.publishMsg(fmt.Sprintf("Creating RTU client for line %d", lnr+1), true)
 			// Create a Modbus client for each line based on its configuration
 			handler := modbus.NewRTUClientHandler(line.Url)
 			handler.Connect()

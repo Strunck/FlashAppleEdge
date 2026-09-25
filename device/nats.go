@@ -22,14 +22,14 @@ func (se *State) initNataSrv() (err error) {
 	if err != nil {
 		return fmt.Errorf("Error creating NATS server: %v", err)
 	}
-	fmt.Printf("NATS server created at %d", Nats_port)
+	fmt.Printf("NATS server created at %d\n", Nats_port)
 
 	se.NatsServer.Start()
 
 	if !se.NatsServer.ReadyForConnections(4 * time.Second) {
 		return fmt.Errorf("Nats Server konnte nicht nach 4 sek starten")
 	}
-	fmt.Printf("NATS server is ready for connections at %s:%d", opts.Host, Nats_port)
+	fmt.Printf("NATS server is ready for connections at %s:%d\n", opts.Host, Nats_port)
 
 	if se.NatsClient, err = nats.Connect(se.NatsServer.ClientURL()); err != nil {
 		return fmt.Errorf("Error connecting NATS client: %v", err)
@@ -45,6 +45,21 @@ func (se *State) chanSubWrapper(subj string, nmsg chan *nats.Msg) (*nats.Subscri
 
 func (se *State) chanLatestMsg(ch chan *nats.Msg) (*nats.Subscription, error) {
 	topic := se.Cfg.Base + ".>"
-	fmt.Println("ChanLatestMsg called()")
+	fmt.Println("ChanLatestMsg called")
+
 	return se.NatsClient.ChanSubscribe(topic, ch)
+}
+
+// Helfer fuction Nachrichten an die WebUI weiterzuleiten und ggf auf der Konsole ausgeben
+func (se State) publishMsg(msg string, toConsole bool) {
+
+	topic := se.Cfg.Base + ".message"
+	if toConsole {
+		fmt.Println(msg)
+	}
+	message := fmt.Appendf(nil, "%s", msg)
+
+	if err := se.NatsClient.Publish(topic, message); err != nil {
+		fmt.Printf("Error publishing topic '%s': %v\n", topic, err)
+	}
 }

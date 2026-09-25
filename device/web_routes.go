@@ -14,7 +14,8 @@ func HandleLogMsg(ds State) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		sse := datastar.NewSSE(w, r)
 
-		msgBufferChannel := make(chan *nats.Msg, 30)
+		msgBufferChannel := make(chan *nats.Msg, LatestMessageCount)
+
 		nsub, err := ds.chanLatestMsg(msgBufferChannel)
 		if err != nil {
 			http.Error(w, "error subscribing to NATS messages", http.StatusInternalServerError)
@@ -76,8 +77,8 @@ func loadIndexTbl(ds State) string {
 	html := ""
 	for l, line := range ds.Cfg.Lines {
 		for i := 0; i < line.IdCount; i++ {
-			f1 := ds.Units[l][i].r.Mess.F1
-			f2 := ds.Units[l][i].r.Mess.F2
+			f1 := ds.Units[l][i].r.Mess.F1 + 1
+			f2 := ds.Units[l][i].r.Mess.F2 + 2
 			y1 := float64(ds.Units[l][i].r.Mess.Y1) / 1000
 			y2 := float64(ds.Units[l][i].r.Mess.Y2) / 1000
 

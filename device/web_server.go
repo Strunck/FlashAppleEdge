@@ -12,11 +12,11 @@ const port = ":8099"
 //go:embed static/*.html static/style.css
 var content embed.FS
 
-func RunWebServer(ds State, errCh chan error) (err error) {
+func RunWebServer(ds State, errCh chan error, httpStarted chan bool) {
 
 	webFS, err := fs.Sub(content, "static")
 	if err != nil {
-		return fmt.Errorf("Error creating sub filesystem: %v\n", err)
+		errCh <- fmt.Errorf("Error creating sub filesystem: %v\n", err)
 	}
 
 	fs := http.FileServer(http.FS(webFS))
@@ -28,12 +28,14 @@ func RunWebServer(ds State, errCh chan error) (err error) {
 	http.Handle("/indextbl", HandleIndexTbl(ds))
 	http.Handle("/messages", HandleLogMsg(ds))
 
-	fmt.Println("Http-Server-Port", port)
+	httpStarted <- true
 
 	err = http.ListenAndServe(port, nil)
+
 	if err != nil {
-		fmt.Printf("Error starting server: %v\n", err)
-		return fmt.Errorf("Error starting server: %v\n", err)
+		errCh <- fmt.Errorf("Error starting server: %v\n", err)
+		return
+	} else {
+		fmt.Println("HTTP server started successfully")
 	}
-	return nil
 }
