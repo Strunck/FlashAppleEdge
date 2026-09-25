@@ -85,7 +85,7 @@ func (m *Messung) Read(cl modbus.Client) (err error) {
 	return nil
 }
 
-func (m Messung) Print() {
+func (m Messung) print() (msg string) {
 	/*
 		----------------------- Messung ---------------------
 		Zeit: 2026-09-01 12:00:00
@@ -94,16 +94,18 @@ func (m Messung) Print() {
 		Minuten des Tages: 123
 		-----------------------------------------------------
 	*/
-	fmt.Printf("Zeit: %s\n", NettesDatum())
-	fmt.Printf("F1: %d - F2: %d - Y1: %d - Y2: %d\n", m.F1, m.F2, m.Y1, m.Y2)
-	fmt.Printf("Flags: %d - NummerF/Y: %d/%d - Fo: %d/%d Fm: %d/%d\n", m.Flags, m.NummerF, m.NummerY, m.Fo1, m.Fo2, m.Fm1, m.Fm2)
-	fmt.Printf("Minuten des Tages: %d\n", m.Minute)
+	msg = fmt.Sprintf("Zeit: %s\n", NettesDatum())
+	msg += fmt.Sprintf("F1: %d - F2: %d - Y1: %d - Y2: %d\n", m.F1, m.F2, m.Y1, m.Y2)
+	msg += fmt.Sprintf("Flags: %d - NummerF/Y: %d/%d - Fo: %d/%d Fm: %d/%d\n", m.Flags, m.NummerF, m.NummerY, m.Fo1, m.Fo2, m.Fm1, m.Fm2)
+	msg += fmt.Sprintf("Minuten des Tages: %d\n", m.Minute)
+	return msg
 }
 
-func (r Register) Print(i, j int) {
-	fmt.Printf("-------- Line: %d, Slave: %d -----------------\n", i+1, j+1)
-	r.Mess.Print()
-	fmt.Printf("--------------------------------------------\n")
+func (r Register) Print(i, j int) (msg string) {
+	msg = fmt.Sprintf("-------- Line: %d, Slave: %d -----------------\n", i+1, j+1)
+	msg += r.Mess.print()
+	msg += "--------------------------------------------\n"
+	return msg
 }
 
 func (m Messung) printCSV() string {
