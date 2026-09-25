@@ -50,8 +50,8 @@ func (s *State) initMetrics() {
 	s.Metrics.Registry = prometheus.NewRegistry()
 
 	// Initialize Messung Gauges
-	for _, line := range s.Cfg.Lines {
-		for _, serial := range line.Id {
+	for lnr, line := range s.Cfg.Lines {
+		for sid, serial := range line.Id {
 			// Initialize the MessungGauges for this serial number and line
 			id := fmt.Sprintf("%d", serial)
 			g := MessungGauges{
@@ -60,6 +60,8 @@ func (s *State) initMetrics() {
 				Y1: newMessungGauge(s.Cfg.Base, id, line.Ort, "Y1"),
 				Y2: newMessungGauge(s.Cfg.Base, id, line.Ort, "Y2"),
 			}
+
+			s.Units[lnr][sid].r.Mess.gauges = g
 
 			s.Metrics.Registry.MustRegister(g.F1)
 			s.Metrics.Registry.MustRegister(g.F2)

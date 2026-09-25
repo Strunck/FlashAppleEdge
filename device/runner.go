@@ -3,7 +3,9 @@ package device
 import (
 	"context"
 	"fmt"
+	"net/http"
 	"os"
+	"time"
 
 	gocron "github.com/go-co-op/gocron/v2"
 	modbus "github.com/goburrow/modbus"
@@ -75,6 +77,11 @@ func (se *State) Run(bgctx context.Context) {
 			errCh <- fmt.Errorf("HTTP server failed to start")
 			return
 		} else {
+			if err := waitForMetricsHandler(bgctx); err != nil {
+				errCh <- fmt.Errorf("metrics handler is not ready: %v", err)
+				return
+			}
+
 			se.PollClients()
 
 			se.sched, err = gocron.NewScheduler()
@@ -101,5 +108,34 @@ func (se *State) Run(bgctx context.Context) {
 			se.sched.Shutdown()
 		}
 		se.CloseAllFiles()
+	}
+}
+
+func waitForMetricsHandler(ctx context.Context) error {
+	deadline := time.Now().Add(5 * time.Second)
+	client := http.Client{Timeout: 500 * time.Millisecond}
+	url := "http://127.0.0.1" + port + "/metrics"
+
+	for {
+		if time.Now().After(deadline) {
+			return fmt.Errorf("timeout waiting for %s", url)
+		}
+
+		req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
+		if err == nil {
+			resp, err := client.Do(req)
+			if err == nil {
+				resp.Body.Close()
+				if resp.StatusCode >= 200 && resp.StatusCode < 300 {
+					return nil
+				}
+			}
+		}
+
+		select {
+		case <-ctx.Done():
+			return context.Cause(ctx)
+		case <-time.After(100 * time.Millisecond):
+		}
 	}
 }

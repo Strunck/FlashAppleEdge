@@ -4,6 +4,7 @@ import (
 	"embed"
 	"fmt"
 	"io/fs"
+	"net"
 	"net/http"
 )
 
@@ -17,20 +18,29 @@ func RunWebServer(ds State, errCh chan error, httpStarted chan bool) {
 	webFS, err := fs.Sub(content, "static")
 	if err != nil {
 		errCh <- fmt.Errorf("Error creating sub filesystem: %v\n", err)
+		return
 	}
 
-	fs := http.FileServer(http.FS(webFS))
-	http.Handle("/", fs)
+	mux := http.NewServeMux()
+	staticFS := http.FileServer(http.FS(webFS))
+	mux.Handle("/", staticFS)
 
-	http.Handle("/metrics", ds.Metrics.MetricsHandler())
+	mux.Handle("/metrics", ds.Metrics.MetricsHandler())
 
 	//  -- Datastar endpoints
-	http.Handle("/indextbl", HandleIndexTbl(ds))
-	http.Handle("/messages", HandleLogMsg(ds))
+	mux.Handle("/indextbl", HandleIndexTbl(ds))
+	mux.Handle("/messages", HandleLogMsg(ds))
+
+	listener, err := net.Listen("tcp", port)
+	if err != nil {
+		errCh <- fmt.Errorf("Error binding HTTP listener: %v\n", err)
+		return
+	}
 
 	httpStarted <- true
 
-	err = http.ListenAndServe(port, nil)
+	fmt.Println("Starting HTTP server on port", port)
+	err = http.Serve(listener, mux)
 
 	if err != nil {
 		errCh <- fmt.Errorf("Error starting server: %v\n", err)
