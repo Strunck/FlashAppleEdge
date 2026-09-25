@@ -9,7 +9,7 @@ import (
 
 // Erstelle Modbus Clients anhand der Eingelesenen Konfiguration
 // 2d Array. [line][SlaveID]
-func (s *State) MakeClientsFromConfig(errCh chan error, initDoneCh chan bool) {
+func (s *State) MakeClientsFromConfig() {
 
 	// Implement the logic to create Modbus clients based on the provided configuration
 	for lnr, line := range s.Cfg.Lines {
@@ -50,7 +50,4 @@ func (s *State) MakeClientsFromConfig(errCh chan error, initDoneCh chan bool) {
 			}
 		}
 	}
-
-	initDoneCh <- true
-
 }

@@ -10,8 +10,8 @@
     <script type="module" src="https://cdn.jsdelivr.net/gh/starfederation/datastar@v1.0.3/bundles/datastar.js"></script>
 	<div class="container" data-effect="@get('/indextbl')">
 
-    <div class="button-grid">
-		<a href="unit.html" type="button">Details</a>
+    <div class="button-grid">		
+		<a href="unit.html?line=0&uid=0" type="button">Details</a>
         <a href="/metrics" type="button">Metrics</a>
 		<button type="button" onclick="location.reload()">Refresh</button>		
 	</div>
@@ -52,7 +52,7 @@
 		</div>
         <br>
 
-        <div class="panel" >
+        <div class="panel" data-effect="@get('/messages')">
             <h3>Meldungen</h3>
             <code id="logmessages">
                 ...status messages will appear here...

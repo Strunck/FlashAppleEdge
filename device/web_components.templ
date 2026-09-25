@@ -1,0 +1,20 @@
+package device
+
+
+type LatestNatsMessage struct {
+    Subject string
+    Data    string
+}
+
+templ LatestNatsMessages(messages []LatestNatsMessage ) {
+    <div id=logmessages >        
+        <code>
+            for _, msg := range messages {
+             
+                    <strong>{ msg.Subject }</strong>: { msg.Data } <br>
+             
+            }
+        </code>
+    </div>
+   
+}

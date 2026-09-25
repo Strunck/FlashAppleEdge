@@ -7,19 +7,24 @@ import (
 
 	gocron "github.com/go-co-op/gocron/v2"
 	modbus "github.com/goburrow/modbus"
+	"github.com/nats-io/nats-server/v2/server"
+	"github.com/nats-io/nats.go"
 )
 
 const (
 	DataFolder = "Daten"
+	Nats_port  = 8082
 )
 
 type State struct {
-	Cfg       Config
-	sched     gocron.Scheduler
-	Units     [][]Unit
-	Metrics   Metrics
-	initState InitStateType
-	initDone  bool
+	Cfg        Config
+	sched      gocron.Scheduler
+	Units      [][]Unit
+	Metrics    Metrics
+	initState  InitStateType
+	initDone   bool
+	NatsServer *server.Server
+	NatsClient *nats.Conn
 }
 
 type Unit struct {
@@ -40,6 +45,7 @@ const (
 	INIT_SCHEDULER // Fehlerfälle?
 	RUNNING        // msg to topic:Errors || Data
 	SHUTDOWN
+	FATAL
 )
 
 func Run(bgctx context.Context) {
@@ -50,14 +56,13 @@ func Run(bgctx context.Context) {
 	errCh := make(chan error, 1)
 	var err error
 
-	initDoneCh := make(chan bool)
-
 	se.setInitState(KONFIG_FILE)
 
 	fmt.Println("statemachine select")
 	for {
 		select {
 		case err := <-errCh:
+			se.NatsClient.Publish("Error", fmt.Appendf(nil, "Error received: %v\n", err))
 			fmt.Printf("Error received: %v\n", err)
 		default:
 			switch se.initState {
@@ -66,12 +71,17 @@ func Run(bgctx context.Context) {
 				se.Cfg, err = LoadConfig()
 				if err != nil {
 					errCh <- fmt.Errorf("Main LoadConfig error: %v", err)
-					se.setInitState(SHUTDOWN)
+					se.setInitState(FATAL)
 				}
 				se.setInitState(INIT_UNITS)
 
 			case INIT_NATS: // NATS initialization
-				se.setInitState(INIT_UNITS)
+				if err := se.initNataSrv(); err != nil {
+					errCh <- fmt.Errorf("Main initNataSrv error: %v", err)
+					se.setInitState(FATAL)
+				} else {
+					se.setInitState(INIT_UNITS)
+				}
 
 			case INIT_UNITS:
 				se.initUnits()
@@ -83,7 +93,7 @@ func Run(bgctx context.Context) {
 
 			case READY_TO_POLL:
 				// Start Polling
-				go se.MakeClientsFromConfig(errCh, initDoneCh)
+				se.MakeClientsFromConfig()
 				se.setInitState(INIT_METRIC)
 
 			case INIT_METRIC:
@@ -102,7 +112,7 @@ func Run(bgctx context.Context) {
 				}
 
 				go func() {
-					err = se.pollHourly(errCh)
+					err = se.pollHourly()
 					if err != nil {
 						errCh <- fmt.Errorf("Main pollHourly error: %v", err)
 					}
@@ -110,16 +120,20 @@ func Run(bgctx context.Context) {
 				se.setInitState(RUNNING)
 
 			case RUNNING:
-				se.initDone = true
-				se.sched.Start()
-				se.PollClients(errCh)
+				if !se.initDone {
+					se.initDone = true
+					se.sched.Start()
+					se.PollClients()
+				}
 
 			case SHUTDOWN:
 				func() { _ = se.sched.Shutdown() }()
 
+			case FATAL:
+				fmt.Println("Fatal error received, shutting down...")
+				os.Exit(1)
 			}
 		}
-
 	}
 }
 
@@ -143,6 +157,8 @@ func (s *State) setInitState(newState InitStateType) {
 		stateTxt = "INIT_SCHEDULER"
 	case RUNNING:
 		stateTxt = "RUNNING"
+	case FATAL:
+		stateTxt = "FATAL"
 	case SHUTDOWN:
 		stateTxt = "SHUTDOWN"
 	default:
