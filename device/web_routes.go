@@ -77,24 +77,25 @@ func loadIndexTbl(ds State) string {
 	html := ""
 	for l, line := range ds.Cfg.Lines {
 		for i := 0; i < line.IdCount; i++ {
-			f1 := ds.Units[l][i].r.Mess.F1 + 1
-			f2 := ds.Units[l][i].r.Mess.F2 + 2
+			f1 := ds.Units[l][i].r.Mess.F1
+			f2 := ds.Units[l][i].r.Mess.F2
 			y1 := float64(ds.Units[l][i].r.Mess.Y1) / 1000
 			y2 := float64(ds.Units[l][i].r.Mess.Y2) / 1000
 
 			html += fmt.Sprintf(`
 				<tr id="messwerte" data-on:click="window.location.href = 'unit.html?line=%d&uid=%d'">
 					<td id="raum">%s</td>
-					<td id="com">%s#%02d</td>
 					<td id="f1">%d</td>
 					<td id="f2">%d</td>
 					<td id="y1">%.2f</td>
 					<td id="y2">%.2f</td>
 					<td id="ts">-</td>
+					<td id="com">%s#%02d</td>
 				</tr>
-			`, l, i, line.Ort, line.Url, line.Id[i], f1, f2, y1, y2) + "\n"
+			`, l, i, line.Ort, f1, f2, y1, y2, line.Url, line.Id[i]) + "\n"
 		}
 	}
 	html = fmt.Sprintf(`<tbody id="indextable">%s</tbody>`, html)
+	fmt.Println("HandleIndexTbl", html)
 	return html
 }

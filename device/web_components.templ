@@ -10,11 +10,13 @@ templ LatestNatsMessages(messages []LatestNatsMessage ) {
     <div id=logmessages >        
         <code>
             for _, msg := range messages {
-             
-                    <strong>{ msg.Subject }</strong>: { msg.Data } <br>
-             
+             { msg.Data } <br>             
             }
         </code>
     </div>
    
+}
+
+templ listAllUnits() {
+    
 }
