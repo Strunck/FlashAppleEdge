@@ -16,22 +16,22 @@ func (s *State) PollClients() {
 			slaveId := s.Cfg.Lines[lnr].Id[sid]
 			loc := fmt.Sprintf("[Line%d] %s▪️%d", lnr+1, ort, slaveId)
 
-			unit := s.Units[lnr][sid]
+			//unit := s.Units[lnr][sid]
 
 			s.publishMsg(fmt.Sprintf("F_Messung %s triggered, 6 sek warten...", loc), true)
-			err := unit.Reg.Trig.Write(unit.m, F_Messung)
+			err := s.Units[lnr][sid].Reg.Trig.Write(s.Units[lnr][sid].m, F_Messung)
 			if err != nil {
 				s.publishMsg(fmt.Sprintf("Error Trig(F_Messung) %s: %v\n", loc, err), true)
 			}
 
-			err = unit.Reg.Mess.Read(unit.m)
+			err = s.Units[lnr][sid].Reg.Mess.Read(s.Units[lnr][sid].m)
 			if err != nil {
 				s.publishMsg(fmt.Sprintf("Error reading Messung %s: %v\n", loc, err), true)
 				continue
 			} else {
-				s.publishMsg(unit.Reg.Print(lnr, sid), true)
+				s.publishMsg(s.Units[lnr][sid].Reg.Print(lnr, sid), true)
 
-				if err := unit.writeLineInCSV(); err != nil {
+				if err := s.Units[lnr][sid].writeLineInCSV(); err != nil {
 					s.publishMsg(fmt.Sprintf("Error writing line to CSV %s: %v\n", loc, err), true)
 					continue
 				}

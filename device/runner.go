@@ -34,24 +34,28 @@ type Unit struct {
 	f   *os.File
 }
 
-func Bootstrap() (se State, err error) {
+func NewState() *State {
+	return &State{}
+}
+
+func (se *State) Bootstrap() (err error) {
 	fmt.Println("statemachine starts")
 
 	se.Cfg, err = LoadConfig()
 	if err != nil {
-		return se, fmt.Errorf("Main LoadConfig error: %v", err)
+		return fmt.Errorf("Main LoadConfig error: %v", err)
 	}
 
 	// NATS Message Bus Initialization
 	if err := se.initNataSrv(); err != nil {
-		return se, fmt.Errorf("Main initNataSrv error: %v", err)
+		return fmt.Errorf("Main initNataSrv error: %v", err)
 	}
 
 	se.initUnits()
 	PrintConfig(se.Cfg)
 
 	if err := se.intiFiles(DataFolder); err != nil {
-		return se, fmt.Errorf("Run intiFiles error: %v", err)
+		return fmt.Errorf("Run intiFiles error: %v", err)
 	}
 
 	se.MakeClientsFromConfig()
@@ -60,7 +64,7 @@ func Bootstrap() (se State, err error) {
 
 	se.initDone = true
 
-	return se, nil
+	return nil
 }
 
 func (se *State) Run(bgctx context.Context) {

@@ -22,7 +22,8 @@ func main() {
 	initDone := make(chan bool, 1)
 
 	// Bootstap
-	se, err := device.Bootstrap()
+	se := device.NewState()
+	err := se.Bootstrap()
 	if err != nil {
 		fmt.Printf("Bootstrap error: %v\n", err)
 		os.Exit(1)
