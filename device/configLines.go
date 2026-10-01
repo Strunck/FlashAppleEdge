@@ -1,6 +1,7 @@
 package device
 
 import (
+	"encoding/json"
 	"fmt"
 
 	"gopkg.in/ini.v1"
@@ -69,4 +70,12 @@ func (se *State) initUnits() {
 	for l, line := range se.Cfg.Lines {
 		se.Units[l] = make([]Unit, len(line.Id))
 	}
+}
+
+func (cfg Config) toJSON() (res []byte, err error) {
+	res, err = json.Marshal(cfg)
+	if err != nil {
+		return nil, err
+	}
+	return res, nil
 }

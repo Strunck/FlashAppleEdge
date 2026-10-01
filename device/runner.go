@@ -29,9 +29,9 @@ type State struct {
 }
 
 type Unit struct {
-	m modbus.Client
-	r Register
-	f *os.File
+	m   modbus.Client
+	Reg Register
+	f   *os.File
 }
 
 func Bootstrap() (se State, err error) {

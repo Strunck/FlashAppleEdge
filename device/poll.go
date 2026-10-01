@@ -19,17 +19,17 @@ func (s *State) PollClients() {
 			unit := s.Units[lnr][sid]
 
 			s.publishMsg(fmt.Sprintf("F_Messung %s triggered, 6 sek warten...", loc), true)
-			err := unit.r.Trig.Write(unit.m, F_Messung)
+			err := unit.Reg.Trig.Write(unit.m, F_Messung)
 			if err != nil {
 				s.publishMsg(fmt.Sprintf("Error Trig(F_Messung) %s: %v\n", loc, err), true)
 			}
 
-			err = unit.r.Mess.Read(unit.m)
+			err = unit.Reg.Mess.Read(unit.m)
 			if err != nil {
 				s.publishMsg(fmt.Sprintf("Error reading Messung %s: %v\n", loc, err), true)
 				continue
 			} else {
-				s.publishMsg(unit.r.Print(lnr, sid), true)
+				s.publishMsg(unit.Reg.Print(lnr, sid), true)
 
 				if err := unit.writeLineInCSV(); err != nil {
 					s.publishMsg(fmt.Sprintf("Error writing line to CSV %s: %v\n", loc, err), true)

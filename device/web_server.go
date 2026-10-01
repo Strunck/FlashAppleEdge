@@ -31,6 +31,9 @@ func RunWebServer(ds State, errCh chan error, httpStarted chan bool) {
 	mux.Handle("/indextbl", HandleIndexTbl(ds))
 	mux.Handle("/messages", HandleLogMsg(ds))
 
+	mux.Handle("/api", HandleAPI(ds))
+	mux.Handle("/api/config", HandleGetConfig(ds))
+
 	listener, err := net.Listen("tcp", port)
 	if err != nil {
 		errCh <- fmt.Errorf("Error binding HTTP listener: %v\n", err)

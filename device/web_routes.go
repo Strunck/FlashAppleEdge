@@ -77,10 +77,10 @@ func loadIndexTbl(ds State) string {
 	html := ""
 	for l, line := range ds.Cfg.Lines {
 		for i := 0; i < line.IdCount; i++ {
-			f1 := ds.Units[l][i].r.Mess.F1
-			f2 := ds.Units[l][i].r.Mess.F2
-			y1 := float64(ds.Units[l][i].r.Mess.Y1) / 1000
-			y2 := float64(ds.Units[l][i].r.Mess.Y2) / 1000
+			f1 := ds.Units[l][i].Reg.Mess.F1
+			f2 := ds.Units[l][i].Reg.Mess.F2
+			y1 := float64(ds.Units[l][i].Reg.Mess.Y1) / 1000
+			y2 := float64(ds.Units[l][i].Reg.Mess.Y2) / 1000
 
 			html += fmt.Sprintf(`
 				<tr id="messwerte" data-on:click="window.location.href = 'unit.html?line=%d&uid=%d'">

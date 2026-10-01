@@ -61,7 +61,7 @@ func (s *State) initMetrics() {
 				Y2: newMessungGauge(s.Cfg.Base, id, line.Ort, "Y2"),
 			}
 
-			s.Units[lnr][sid].r.Mess.gauges = g
+			s.Units[lnr][sid].Reg.Mess.gauges = g
 
 			s.Metrics.Registry.MustRegister(g.F1)
 			s.Metrics.Registry.MustRegister(g.F2)
