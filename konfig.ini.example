@@ -1,10 +1,10 @@
 # Einstellungen 
 
 # Base ist, der Kudenkurzname zur Instrumentierung
-BASE = XYZ
+BASE = JUL
 
 # Anzahl der Linien, also der Verfügbaren RS485 Linien
-LINES = 1
+LINES = 2
 
 
 # Die Line Sektionen werden stumpf durchnummeriert, z.B. Line1, Line2, ...
@@ -21,7 +21,7 @@ LINES = 1
 CONTYPE = RTU
 URL = COM3
 ORT = R08
-ID = 13
+ID = 33, 34, 35, 36
 
 [Line2]
 CONTYPE = RTU
