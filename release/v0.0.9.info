@@ -1,2 +1,44 @@
 Version: 0.0.9
-Erstellt am Do 1. Okt 06:59:54 CEST 2026
+Erstellt am Do 1. Okt 07:22:30 CEST 2026
+
+Git Log:
+0fcc9df Build 0.0.9
+c46c1e4 move html, css to Gepuhle Ordner
+6412489 Add JSON api, and rename Registry to Reg
+c13cc6e add konfig.ini.example
+4bdc231 Build 0.0.8
+7328b3b  error and status messages are getting published
+aa50f05 del nats topic in messag ticker, reoder table
+1e9a7b1 Build 0.0.7
+21184ac Agent fix 0.0.6
+e8027fd Build 0.0.6
+0677b38 Fix internal Nats Messaging
+f515d8d Add Nats und templ, delete initDoneCh
+e117709 avoid opening http links with vs code
+c474234 Delete web module, move everthing over to module device and add state pattern
+c8246cf datastar sdk is a direct dependency
+39985ad Build 0.0.5
+90ac1d3 Add prometheus metrics and datastar package
+ffb157b Move main.go
+459aa72 Build 0.0.4
+3ff500d Update README
+1f29ece Newline in CSV
+0b4c4c4 Upload binaries
+de1f46a add build script
+ca5c9ad Kommas in CSV Line
+0c39472 State struct vereinfacht
+122d930 ORT in Konfigdatei als string
+05b11b8 Add .gitignore
+dfba117 Add CSV-Dateispeicherung
+b1b54b9 Unterschiedliche Wartenzeiten nach Trigger
+afb94ae Add UI
+1409a6a Update Infos
+f62c8e5 Trigger F_Messung in poll
+0988239 Update README.md
+ca37e67 Netter Ausgabe
+718ef07 add stündlichen poll
+ab1b53b Use gocron v2 and tidy
+1b4f504 Add Stundenzähler
+b618f40 Add dependency gocron
+68f8ac1 Add JUL Konfig
+0ec4205 Erster Commit
