@@ -10,19 +10,20 @@ import (
 
 // Messung 12 Register
 type Messung struct {
-	Flags   uint16 `register:"10"`
-	NummerF uint16 `register:"11"`
-	NummerY uint16 `register:"12"`
-	F1      uint16 `register:"13"`
-	F2      uint16 `register:"14"`
-	Y1      uint16 `register:"15"`
-	Y2      uint16 `register:"16"`
-	Fo1     uint16 `register:"17"`
-	Fo2     uint16 `register:"18"`
-	Fm1     uint16 `register:"19"`
-	Fm2     uint16 `register:"20"`
-	Minute  uint16 `register:"21"`
-	gauges  MessungGauges
+	Flags     uint16 `register:"10"`
+	NummerF   uint16 `register:"11"`
+	NummerY   uint16 `register:"12"`
+	F1        uint16 `register:"13"`
+	F2        uint16 `register:"14"`
+	Y1        uint16 `register:"15"`
+	Y2        uint16 `register:"16"`
+	Fo1       uint16 `register:"17"`
+	Fo2       uint16 `register:"18"`
+	Fm1       uint16 `register:"19"`
+	Fm2       uint16 `register:"20"`
+	Minute    uint16 `register:"21"`
+	TimeStamp time.Time
+	gauges    MessungGauges
 }
 
 type Trigger struct {
@@ -81,6 +82,7 @@ func (m *Messung) Read(cl modbus.Client) (err error) {
 	m.Fm1 = binary.BigEndian.Uint16(results[18:20])
 	m.Fm2 = binary.BigEndian.Uint16(results[20:22])
 	m.Minute = binary.BigEndian.Uint16(results[22:24])
+	m.TimeStamp = time.Now()
 	m.setGauges()
 	return nil
 }
