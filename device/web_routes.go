@@ -79,8 +79,8 @@ func loadIndexTbl(ds State) string {
 		for i := 0; i < line.IdCount; i++ {
 			f1 := ds.Units[l][i].Reg.Mess.F1
 			f2 := ds.Units[l][i].Reg.Mess.F2
-			y1 := float64(ds.Units[l][i].Reg.Mess.Y1) / 1000
-			y2 := float64(ds.Units[l][i].Reg.Mess.Y2) / 1000
+			y1 := float64(ds.Units[l][i].Reg.Mess.Y1) / 10
+			y2 := float64(ds.Units[l][i].Reg.Mess.Y2) / 10
 			ts := ds.Units[l][i].Reg.Mess.TimeStamp.Format("01-02 15:04:05")
 
 			html += fmt.Sprintf(`
@@ -88,8 +88,8 @@ func loadIndexTbl(ds State) string {
 					<td id="raum">%s</td>
 					<td id="f1">%d</td>
 					<td id="f2">%d</td>
-					<td id="y1">%.2f</td>
-					<td id="y2">%.2f</td>
+					<td id="y1">%.1f &percnt;</td>
+					<td id="y2">%.1f &percnt;</td>
 					<td id="ts">%s</td>
 					<td id="com">%s#%02d</td>
 				</tr>
